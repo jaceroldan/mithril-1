@@ -54,16 +54,19 @@ for i in range(0, len(detections["boxes"])):
 
 	if confidence > args['confidence']:
 		idx = int(detections['labels'][i])
+		print(detections)
 		box = detections['boxes'][i].detach().cpu().numpy()
 		(startX, startY, endX, endY) = box.astype('int')
 
 		print(idx)
-		label = "{}: {:.2f}%".format(CLASSES[idx-1], confidence * 100)
+		label = "{}: {:.2f}%".format(CLASSES[idx], confidence * 100)
 		print("[INFO] {}".format(label))
 
 		cv2.rectangle(orig, (startX, startY), (endX, endY), COLORS[idx], 2)
 		y = startY - 15 if startY - 15 > 15 else startY + 15
 		cv2.putText(orig, label, (startX, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[idx], 2)
+
+torch.save(model, './models/model.pt')
 
 cv2.imshow("Output", orig)
 cv2.imwrite('test.png', orig)
